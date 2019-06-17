@@ -15,29 +15,26 @@ public class ClientHandler {
         commandsMap.put("setElevator", "set controls/flight/elevator ");
     }
 
-    public void ConnectToServer(String ip, int port) {
+    public void connectToServer(String ip, int port) {
         if (!ip.isEmpty()) {
             if (Client.getInstance().isConnected()) {
-                this.CloseConnection();
+                this.stopConnection();
             }
             Client.getInstance().connectToServer(ip, port);
         }
     }
 
-    public void CloseConnection() {
+    public void stopConnection() {
         Client.getInstance().stopConnection();
     }
 
     public void sendCommand(String key, double value) {
 
-        Client client = Client.getInstance();
-
-        if (client.isConnected()) {
+        if (Client.getInstance().isConnected()) {
             String command = this.commandsMap.get(key) + value;
-            client.sendCommand(command);
+            Client.getInstance().sendCommand(command);
         }
 
     }
-
 
 }

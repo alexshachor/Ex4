@@ -16,6 +16,7 @@
         android:layout_marginLeft="24dp"
         android:layout_marginTop="124dp"
         android:background="#FFFFFF"
+        android:inputType="textPersonName|text"
         android:textSize="24sp"
         app:layout_constraintStart_toEndOf="@+id/IpText"
         app:layout_constraintTop_toTopOf="parent" />
@@ -54,6 +55,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginTop="40dp"
         android:background="#FFFFFF"
+        android:inputType="number"
         android:textSize="24sp"
         app:layout_constraintStart_toEndOf="@+id/PortText"
         app:layout_constraintTop_toBottomOf="@+id/IpField" />

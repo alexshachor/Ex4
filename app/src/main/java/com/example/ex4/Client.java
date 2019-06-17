@@ -1,7 +1,5 @@
 package com.example.ex4;
 
-import android.os.AsyncTask;
-import android.util.Log;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -19,14 +17,11 @@ public class Client {
     }
 
     private static class ClientSingleton {
-
         private static final Client INSTANCE = new Client();
-
     }
 
 
     public static Client getInstance() {
-
         return ClientSingleton.INSTANCE;
     }
 
@@ -59,7 +54,6 @@ public class Client {
         if (!command.endsWith(newLine)) {
             command += newLine;
         }
-        Log.d("tag0", "0");
 
         final String finalCommand = command;
         Runnable runnable = new Runnable() {
@@ -67,55 +61,18 @@ public class Client {
             public void run() {
                 try {
                     byte[] commandBytes = finalCommand.getBytes();
-                    Log.d("tag1", "1");
                     clientStream.write(commandBytes, 0, commandBytes.length);
                     clientStream.flush();
-                    Log.d("tag2", "2");
-
-
                 } catch (Exception e) {
-
+                    e.printStackTrace();
                 }
             }
         };
-        //run the thread
+        //start the thread
         Thread thread = new Thread(runnable);
         thread.start();
     }
-//        AsyncTask t = new AsyncTask<Void, Void, Void>() {
-//            @Override
-//            protected Void doInBackground(Void... voids) {
-//                try {
-//                   // while (true) {
-//                      Runnable runnable  = new Runnable() {
-//                          @Override
-//                          public void run() {
-//                              sendCommandThread(finalCommand);
-//                          }
-//                      };
-//
-//                      Thread t = new Thread(runnable);
-//                      t.start();
-//
-//                  //  }
-//                } catch (Exception e) {
-//
-//                }
-//
-//                return null;
-//                //    Runnable runnable = new Runnable() {
-//                //        @Override
-//                //        public void run() {
-//                //            sendCommandThread(finalCommand);
-//                //        }
-//                //    };
-//
-//                //    return null;
-//                // }
-//            }
-//        };
-//        t.execute((Void[])null);
-//}
+
 
     public boolean isConnected() {
         return this.isConnected;
@@ -132,18 +89,4 @@ public class Client {
             isConnected = false;
         }
     }
-
-    private void sendCommandThread(String command) {
-
-        byte[] commandBytes = command.getBytes();
-        try {
-            if (clientSocket != null) {
-                clientStream.write(commandBytes, 0, commandBytes.length);
-                clientStream.flush();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 }
