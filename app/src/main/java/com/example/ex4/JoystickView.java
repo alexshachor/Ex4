@@ -6,13 +6,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
-
+//this class is based on website (https://www.instructables.com/id/A-Simple-Android-UI-Joystick/)
 public class JoystickView extends SurfaceView implements SurfaceHolder.Callback, View.OnTouchListener {
     private float centerX;
     private float centerY;
@@ -80,8 +79,10 @@ public class JoystickView extends SurfaceView implements SurfaceHolder.Callback,
             //draw the text
             colors.setColor(Color.rgb(255, 0, 0));
             colors.setTextSize(48);
-            myCanvas.drawText("Aileron: " + Float.toString(cos), 20, 100, colors);
-            myCanvas.drawText("Elevator: " + Float.toString(sin), 20, 40, colors);
+            myCanvas.drawText("Aileron: " + cos, 20, 100, colors);
+            myCanvas.drawText("Elevator: " + sin, 20, 40, colors);
+
+            //update server with the new values
             clientHandler.updateAileron(cos);
             clientHandler.updateElevator(sin);
             getHolder().unlockCanvasAndPost(myCanvas);
@@ -106,7 +107,6 @@ public class JoystickView extends SurfaceView implements SurfaceHolder.Callback,
                 float displacement = (float) Math.sqrt((Math.pow(e.getX() - centerX, 2)) + Math.pow(e.getY() - centerY, 2));
                 if (displacement < (baseRadius - hatRadius)) {
                     drawJoystick(e.getX(), e.getY());
-                    //joystickCallback.onJoystickMoved((e.getX() - centerX)/baseRadius, (e.getY() - centerY)/baseRadius, getId());
                 } else {
                     float ratio = (baseRadius - hatRadius) / displacement;
                     float constrainedX = centerX + (e.getX() - centerX) * ratio;
