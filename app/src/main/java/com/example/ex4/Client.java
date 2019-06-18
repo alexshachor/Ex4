@@ -47,7 +47,7 @@ public class Client {
         thread.start();
     }
 
-    synchronized public void sendCommand(String command) {
+    public void sendCommand(String command) {
 
         if (!this.isConnected) {
             return;
