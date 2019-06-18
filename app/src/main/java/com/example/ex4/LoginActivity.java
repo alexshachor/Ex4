@@ -19,7 +19,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void connect(View v) {
-        findViewById(R.id.LoginActivity).setBackgroundColor(Color.LTGRAY);
 
         String ip = ((EditText) findViewById(R.id.IpField)).getText().toString();
         String portStr = ((EditText) findViewById(R.id.PortField)).getText().toString();
