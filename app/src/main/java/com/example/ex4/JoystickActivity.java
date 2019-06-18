@@ -9,11 +9,10 @@ public class JoystickActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_joystick);
-        // JoystickView joystick = new JoystickView(this);
         setContentView(R.layout.activity_joystick);
         ClientHandler clientHandler = new ClientHandler();
-        clientHandler.sendCommand("setAileron", 0.333);
+        clientHandler.updateAileron(0.2);
+        clientHandler.updateElevator(0.97);
     }
 
     @Override

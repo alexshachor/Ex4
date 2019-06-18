@@ -27,6 +27,7 @@ public class Client {
 
     public void connectToServer(final String ip, final int port) {
 
+        //start connection with the server, in a separated thread
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -56,6 +57,8 @@ public class Client {
         }
 
         final String finalCommand = command;
+
+        //send a message to the server, in a separated thread
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -78,6 +81,7 @@ public class Client {
         return this.isConnected;
     }
 
+    //close resources and stop connection with the server
     public void stopConnection() {
 
         if (clientSocket != null) {

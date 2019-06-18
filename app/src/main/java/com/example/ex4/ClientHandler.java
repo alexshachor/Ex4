@@ -10,13 +10,16 @@ public class ClientHandler {
     private Map<String, String> commandsMap;
 
     public ClientHandler() {
+
+        //init commands map, where the value is the command itself
         commandsMap = new HashMap<String, String>();
-        commandsMap.put("setAileron", "set controls/flight/aileron ");
-        commandsMap.put("setElevator", "set controls/flight/elevator ");
+        commandsMap.put("Aileron", "set controls/flight/aileron ");
+        commandsMap.put("Elevator", "set controls/flight/elevator ");
     }
 
     public void connectToServer(String ip, int port) {
         if (!ip.isEmpty()) {
+            //if the client is already connected, close connection
             if (Client.getInstance().isConnected()) {
                 this.stopConnection();
             }
@@ -28,7 +31,15 @@ public class ClientHandler {
         Client.getInstance().stopConnection();
     }
 
-    public void sendCommand(String key, double value) {
+    public void updateAileron(double value) {
+        sendCommand("Aileron", value);
+    }
+
+    public void updateElevator(double value) {
+        sendCommand("Elevator", value);
+    }
+
+    private void sendCommand(String key, double value) {
 
         if (Client.getInstance().isConnected()) {
             String command = this.commandsMap.get(key) + value;

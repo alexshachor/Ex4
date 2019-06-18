@@ -20,12 +20,14 @@ public class LoginActivity extends AppCompatActivity {
 
     public void connect(View v) {
 
+        //get ip and port from user input
         String ip = ((EditText) findViewById(R.id.IpField)).getText().toString();
         String portStr = ((EditText) findViewById(R.id.PortField)).getText().toString();
         try {
             int port = Integer.parseInt(portStr);
 
             if (!ip.isEmpty()) {
+                //connect to server and move to Joystick activity
                 ClientHandler clientHandler = new ClientHandler();
                 clientHandler.connectToServer(ip, port);
                 Intent intent = new Intent(LoginActivity.this, JoystickActivity.class);
