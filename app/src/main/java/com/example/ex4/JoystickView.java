@@ -20,6 +20,7 @@ public class JoystickView extends SurfaceView implements SurfaceHolder.Callback,
     private float hatRadius;
     private JoystickListener joystickCallback;
     private final int ratio = 5; //The smaller, the more shading will occur
+    private float sin, cos;
 
     private void setupDimensions()
     {
@@ -56,30 +57,50 @@ public class JoystickView extends SurfaceView implements SurfaceHolder.Callback,
             joystickCallback = (JoystickListener) context;
     }
 
-    private void drawJoystick(float newX, float newY)
+    private void drawJoystick(float newX, float newY, boolean bool)
     {
         if(getHolder().getSurface().isValid())
         {
             Canvas myCanvas = this.getHolder().lockCanvas(); //Stuff to draw
             Paint colors = new Paint();
-            colors.setColor(Color.rgb(255,0,0));
-            myCanvas.drawText(Float.toString(newX), 20, 40, colors);
-            myCanvas.drawText(Float.toString(newY), 20, 100, colors);
             myCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR); // Clear the BG
 
             //First determine the sin and cos of the angle that the touched point is at relative to the center of the joystick
+            float hypotenuse = (float) Math.sqrt(Math.pow(newX - centerX, 2) + Math.pow(newY - centerY, 2));
+
+
+
 
             //Draw the base first before shading
+            colors.setColor(Color.rgb(255,0,0));
+            myCanvas.drawCircle(centerX, centerY, getWidth()/2, colors);
             colors.setARGB(255, 100, 100, 100);
-            myCanvas.drawCircle(centerX, centerY, baseRadius, colors);
-
             //Drawing the joystick hat
             for(int i = 0; i <= (int) (hatRadius / ratio); i++)
             {
                 colors.setARGB(255, (int) (i * (255 * ratio / hatRadius)), (int) (i * (255 * ratio / hatRadius)), 255); //Change the joystick color for shading purposes
                 myCanvas.drawCircle(newX, newY, hatRadius - (float) i * (ratio) / 2 , colors); //Draw the shading for the hat
             }
-
+            colors.setColor(Color.rgb(255,0,0));
+            colors.setTextSize(40);
+            sin = (newY - centerY) / hypotenuse; //sin = o/h
+            cos = (newX - centerX) / hypotenuse; //cos = a/h
+            if (sin > 0.99) {
+                sin = 1;
+                cos = 0;
+            } else if (sin < -0.99) {
+                sin = -1;
+                cos = 0;
+            }
+            if (cos > 0.99) {
+                cos = 1;
+                sin = 0;
+            } else if (cos < -0.99) {
+                cos = -1;
+                sin = 0;
+            }
+            myCanvas.drawText(Float.toString(sin), 20, 40, colors);
+            myCanvas.drawText(Float.toString(cos), 20, 100, colors);
             getHolder().unlockCanvasAndPost(myCanvas); //Write the new drawing to the SurfaceView
         }
     }
@@ -88,7 +109,7 @@ public class JoystickView extends SurfaceView implements SurfaceHolder.Callback,
     public void surfaceCreated(SurfaceHolder holder)
     {
         setupDimensions();
-        drawJoystick(centerX, centerY);
+        drawJoystick(centerX, centerY, false);
     }
 
     @Override
@@ -110,20 +131,21 @@ public class JoystickView extends SurfaceView implements SurfaceHolder.Callback,
                 float displacement = (float) Math.sqrt((Math.pow(e.getX() - centerX, 2)) + Math.pow(e.getY() - centerY, 2));
                 if(displacement < baseRadius)
                 {
-                    drawJoystick(e.getX(), e.getY());
-                   // joystickCallback.onJoystickMoved((e.getX() - centerX)/baseRadius, (e.getY() - centerY)/baseRadius, getId());
+                    drawJoystick(e.getX(), e.getY(), false);
+                    //joystickCallback.onJoystickMoved((e.getX() - centerX)/baseRadius, (e.getY() - centerY)/baseRadius, getId());
                 }
                 else
                 {
                     float ratio = baseRadius / displacement;
                     float constrainedX = centerX + (e.getX() - centerX) * ratio;
                     float constrainedY = centerY + (e.getY() - centerY) * ratio;
-                    drawJoystick(constrainedX, constrainedY);
-                  //  joystickCallback.onJoystickMoved((constrainedX-centerX)/baseRadius, (constrainedY-centerY)/baseRadius, getId());
+                    drawJoystick(constrainedX, constrainedY, true);
+
+                    //joystickCallback.onJoystickMoved((constrainedX-centerX)/baseRadius, (constrainedY-centerY)/baseRadius, getId());
                 }
             }
             else
-                drawJoystick(centerX, centerY);
+                drawJoystick(centerX, centerY, false);
             //joystickCallback.onJoystickMoved(0,0,getId());
         }
         return true;
@@ -131,6 +153,6 @@ public class JoystickView extends SurfaceView implements SurfaceHolder.Callback,
 
     public interface JoystickListener
     {
-        void onJoystickMoved(float xPercent, float yPercent, int id);
+        //void onJoystickMoved(float xPercent, float yPercent, int id);
     }
 }
