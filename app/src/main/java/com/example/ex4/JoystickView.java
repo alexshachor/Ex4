@@ -19,18 +19,20 @@ public class JoystickView extends SurfaceView implements SurfaceHolder.Callback,
     private float baseRadius;
     private float hatRadius;
     private final int ratio = 5;
+    private ClientHandler clientHandler;
 
     private void setupDimensions() {
-        centerX = getWidth() / 2;
-        centerY = getHeight() / 2;
-        baseRadius = Math.min(getWidth(), getHeight()) * 4 / 9;
-        hatRadius = Math.min(getWidth(), getHeight()) / 5;
+        this.centerX = getWidth() / 2;
+        this.centerY = getHeight() / 2;
+        this.baseRadius = Math.min(getWidth(), getHeight()) * 4 / 9;
+        this.hatRadius = Math.min(getWidth(), getHeight()) / 5;
     }
 
     public JoystickView(Context context, AttributeSet attributes) {
         super(context, attributes);
         getHolder().addCallback(this);
         setOnTouchListener(this);
+        this.clientHandler = new ClientHandler();
     }
 
     private void drawJoystick(float newX, float newY) {
@@ -80,6 +82,8 @@ public class JoystickView extends SurfaceView implements SurfaceHolder.Callback,
             colors.setTextSize(48);
             myCanvas.drawText("Aileron: " + Float.toString(cos), 20, 100, colors);
             myCanvas.drawText("Elevator: " + Float.toString(sin), 20, 40, colors);
+            clientHandler.updateAileron(cos);
+            clientHandler.updateElevator(sin);
             getHolder().unlockCanvasAndPost(myCanvas);
         }
     }
