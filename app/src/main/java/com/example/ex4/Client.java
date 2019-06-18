@@ -1,6 +1,8 @@
 package com.example.ex4;
 
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -35,6 +37,7 @@ public class Client {
                     clientSocket = new Socket(ip, port);
                     clientStream = clientSocket.getOutputStream();
                     isConnected = true;
+                    Log.i("Communication","Connection has established");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -66,6 +69,7 @@ public class Client {
                     byte[] commandBytes = finalCommand.getBytes();
                     clientStream.write(commandBytes, 0, commandBytes.length);
                     clientStream.flush();
+                    Log.i("Communication",finalCommand);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -87,6 +91,7 @@ public class Client {
         if (clientSocket != null) {
             try {
                 this.clientSocket.close();
+                Log.i("Communication","Connection has closed");
             } catch (IOException e) {
                 e.printStackTrace();
             }
